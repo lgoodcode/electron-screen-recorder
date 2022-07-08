@@ -1,9 +1,13 @@
 {
-  "name": "electron-react-typescript-webpack",
-  "version": "0.2.3",
-  "description": "Fast, secure, unopinionated, Electron boilerplate",
+  "name": "electron-screen-recorder",
+  "version": "0.1.0",
+  "description": "Simple app to record your screen and save it to a file.",
   "author": "Lawrence Good",
   "license": "MIT",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/lgoodcode/electron-screen-recorder"
+  },
   "scripts": {
     "clean": "ts-node scripts/clean.js --run",
     "start": "cross-env NODE_ENV=development ts-node scripts/start.ts",
@@ -16,8 +20,7 @@
     "pack:dir": "ts-node scripts/checkBuild.ts --run && electron-builder --dir",
     "pack:dev": "cross-env DEBUG_PROD=true electron release/app",
     "test": "jest",
-    "test:watch": "jest --watchAll",
-    "postinstall": "electron-builder install-app-deps"
+    "test:watch": "jest --watchAll"
   },
   "build": {
     "productName": "Secure Electron Boilerplate",
