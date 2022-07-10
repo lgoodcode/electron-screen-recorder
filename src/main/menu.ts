@@ -26,6 +26,10 @@ export default class MenuBuilder {
 		return menu
 	}
 
+	/**
+	 * If in development, we want the context menu to give us the ability to
+	 * inspect the element.
+	 */
 	setupDevelopmentEnvironment(): void {
 		this.mainWindow.webContents.on('context-menu', (_, props) => {
 			const { x, y } = props

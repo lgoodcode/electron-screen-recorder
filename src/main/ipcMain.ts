@@ -1,4 +1,4 @@
-import { ipcMain, desktopCapturer, Menu, dialog } from 'electron'
+import { ipcMain, desktopCapturer, Menu, dialog, BrowserWindow } from 'electron'
 import validateIpcSender from '../lib/validateIpcSender'
 import { writeFile } from 'fs'
 
@@ -27,6 +27,10 @@ ipcMain.on('getVideoSources', async (event) => {
 	videoOptionsMenu.popup()
 })
 
+/**
+ * Used to listen to for when receiving a video with the ArrayBuffer of the
+ * stream from the renderer process, prompt where to save the video.
+ */
 ipcMain.on('processVideo', async (event, ab) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
@@ -42,4 +46,39 @@ ipcMain.on('processVideo', async (event, ab) => {
 	} else {
 		event.reply('processVideo', 'No path seletected. Aborted saving video.')
 	}
+})
+
+/**
+ *
+ * mainWindow
+ *
+ */
+ipcMain.handle('isMaximized', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	return BrowserWindow.getFocusedWindow()?.isMaximized()
+})
+
+ipcMain.on('maximize', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	BrowserWindow.getFocusedWindow()?.maximize()
+})
+
+ipcMain.on('minimize', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	BrowserWindow.getFocusedWindow()?.minimize()
+})
+
+ipcMain.on('restore', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	BrowserWindow.getFocusedWindow()?.unmaximize()
+})
+
+ipcMain.once('close', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	BrowserWindow.getFocusedWindow()?.close()
 })

@@ -44,6 +44,10 @@ const rendererConfig: webpack.Configuration = {
 				test: /\.css$/,
 				use: [isProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'],
 			},
+			{
+				test: /\.svg$/,
+				type: 'asset/inline',
+			},
 		],
 	},
 	optimization: {
@@ -85,11 +89,6 @@ const rendererConfig: webpack.Configuration = {
 				}, {}),
 				{
 					hashEnabled: {
-						'style-src': false,
-					},
-					// TODO: remove this once published as it's only to allow testing
-					// TailwindCSS from cdn for production testing
-					nonceEnabled: {
 						'style-src': false,
 					},
 				}

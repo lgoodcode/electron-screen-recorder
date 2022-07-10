@@ -1,14 +1,12 @@
 import { useRef } from 'react'
 import useRecorder from '../../lib/useRecorder'
 
-const { ipcRenderer } = window.electron
-
 export default function Main() {
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const { hasSource, recording, processing, startRecording, stopRecording } = useRecorder(videoRef)
 
 	const handleGetSources = async () => {
-		ipcRenderer.send('getVideoSources')
+		window.ipcRenderer.send('getVideoSources')
 	}
 
 	return (

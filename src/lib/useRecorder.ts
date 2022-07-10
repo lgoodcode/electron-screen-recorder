@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const {
-	electron: { ipcRenderer },
-	processVideo,
-} = window
+const { ipcRenderer, processVideo } = window
 
 const getStreamConstraints = (id: string) => ({
 	audio: false,
@@ -72,11 +69,11 @@ export default function useRecorder(videoRef?: React.RefObject<HTMLVideoElement>
 		if (video) {
 			// Once the main process has sent the video sources, get the stream
 			// using the navigator, set the playback source, and create the recorder.
-			ipcRenderer.on('getVideoSources', async (id) => {
+			ipcRenderer.on('getVideoSources', (id) => {
 				// Need to set type to any because the chromeMediaSource properties
 				// are not part of the standard.
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const stream = await (navigator.mediaDevices as any).getUserMedia(
+				const stream = (navigator.mediaDevices as any).getUserMedia(
 					getStreamConstraints(id as string)
 				)
 

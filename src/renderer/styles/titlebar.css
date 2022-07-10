@@ -1,0 +1,15 @@
+/**
+ * Prevent the user from being able to select content in the title bar.
+ * Prevent drag on the buttons. The app-region is not available in the
+ * ChakraUI configuration so we need to use a stylesheet.
+ */
+
+#titlebar {
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-app-region: drag;
+}
+
+.win-ctrl-btn {
+	-webkit-app-region: no-drag;
+}

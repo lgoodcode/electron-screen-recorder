@@ -22,8 +22,7 @@ export const createWindow = async () => {
 		height: 768,
 		minWidth: 640,
 		minHeight: 840,
-		maxWidth: 1280,
-		maxHeight: 1024,
+		frame: false,
 		icon: getAsset('icon.ico'),
 		webPreferences: {
 			// Allow devTools in development or debugging production build
