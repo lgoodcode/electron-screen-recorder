@@ -1,7 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom'
 import { ChakraProvider } from '@chakra-ui/react'
 import Layout from './components/Layout'
-import Main from './components/Main'
+import routes from './routes'
 import theme from './styles/theme'
 
 export default function App() {
@@ -10,7 +10,9 @@ export default function App() {
 			<Router>
 				<Routes>
 					<Route path="/" element={<Layout />}>
-						{/* <Route path="/" element={<Main />} /> */}
+						{routes.map((route) => (
+							<Route path={route.path} element={route.element} key={route.path} />
+						))}
 					</Route>
 				</Routes>
 			</Router>

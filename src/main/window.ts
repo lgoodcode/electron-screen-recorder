@@ -20,8 +20,8 @@ export const createWindow = async () => {
 		show: false,
 		width: 1200,
 		height: 768,
-		minWidth: 640,
-		minHeight: 840,
+		minWidth: 1200,
+		minHeight: 640,
 		frame: false,
 		icon: getAsset('icon.ico'),
 		webPreferences: {

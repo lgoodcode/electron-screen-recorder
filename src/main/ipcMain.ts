@@ -49,9 +49,7 @@ ipcMain.on('processVideo', async (event, ab) => {
 })
 
 /**
- *
- * mainWindow
- *
+ * mainWindow API
  */
 ipcMain.handle('isMaximized', (event) => {
 	if (!validateIpcSender(event.senderFrame)) return

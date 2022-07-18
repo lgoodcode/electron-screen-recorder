@@ -3,7 +3,9 @@ import useRecorder from '../../lib/useRecorder'
 
 export default function Main() {
 	const videoRef = useRef<HTMLVideoElement>(null)
-	const { hasSource, recording, processing, startRecording, stopRecording } = useRecorder(videoRef)
+	const { hasSource, recording, processing, startRecording, stopRecording } = useRecorder({
+		videoRef,
+	})
 
 	const handleGetSources = async () => {
 		window.ipcRenderer.send('getVideoSources')

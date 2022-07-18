@@ -1,12 +1,11 @@
-import { Box, Center, Grid, Icon, Image, Tooltip } from '@chakra-ui/react'
+import { Box, Center, Grid, Icon, Tooltip } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import {
+	VscChromeClose,
 	VscChromeMaximize,
 	VscChromeMinimize,
 	VscChromeRestore,
-	VscChromeClose,
 } from 'react-icons/vsc'
-import icon from '../../../assets/icon.svg'
 import '../styles/titlebar.css'
 
 export default function TitleBar() {
@@ -43,9 +42,9 @@ export default function TitleBar() {
 			zIndex={10}
 		>
 			<Box id="drag-region" w="full" h="full">
-				<Box pos="absolute" top={0} left={0} h={'32px'} w={'32px'}>
+				{/* <Box pos="absolute" top={0} left={0} h={'32px'} w={'32px'}>
 					<Image src={icon} />
-				</Box>
+				</Box> */}
 
 				<Grid
 					id="window-controls"

@@ -2,24 +2,38 @@ import { useEffect, useState } from 'react'
 
 const { ipcRenderer, processVideo } = window
 
-const getStreamConstraints = (id: string) => ({
+export type StreamConstraintsOptions = {
+	minWidth?: number
+	minHeight?: number
+	maxWidth?: number
+	maxHeight?: number
+}
+
+const getStreamConstraints = (id: string, options?: StreamConstraintsOptions) => ({
 	audio: false,
 	video: {
 		mandatory: {
 			chromeMediaSource: 'desktop',
 			chromeMediaSourceId: id,
 		},
-		minWidth: 720,
-		maxWidth: 1280,
-		minHeight: 720,
-		maxHeight: 1280,
+		minWidth: 480,
+		minHeight: 270,
+		maxWidth: 1920,
+		maxHeight: 1080,
+		...options,
 	},
 })
+
+export type useRecorderOptions = {
+	videoRef?: React.RefObject<HTMLVideoElement>
+	streamConstraints?: StreamConstraintsOptions
+}
 
 /**
  * useRecorder hook. Used to manage the recording process of desktop sources.
  */
-export default function useRecorder(videoRef?: React.RefObject<HTMLVideoElement>) {
+export default function useRecorder(options?: useRecorderOptions) {
+	const { videoRef, streamConstraints } = options || {}
 	const [video, setVideo] = useState<HTMLVideoElement | null>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
 	const [recorder, setRecorder] = useState<MediaRecorder | null>(null)
@@ -74,7 +88,7 @@ export default function useRecorder(videoRef?: React.RefObject<HTMLVideoElement>
 				// are not part of the standard.
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const stream = (navigator.mediaDevices as any).getUserMedia(
-					getStreamConstraints(id as string)
+					getStreamConstraints(id as string, streamConstraints)
 				)
 
 				// Set the stream to preview the video
