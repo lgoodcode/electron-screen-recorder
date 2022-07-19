@@ -11,7 +11,7 @@ export default function App() {
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						{routes.map((route) => (
-							<Route path={route.path} element={route.element} key={route.path} />
+							<Route path={route.path} element={<route.Element />} key={route.path} />
 						))}
 					</Route>
 				</Routes>

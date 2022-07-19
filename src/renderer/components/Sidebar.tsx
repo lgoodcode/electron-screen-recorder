@@ -1,8 +1,8 @@
 import { Box, Divider, Flex, Icon, Image, Text, useColorModeValue } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { AiOutlineArrowLeft, AiOutlineVideoCamera, AiOutlineFolderOpen } from 'react-icons/ai'
-import { BiCog } from 'react-icons/bi'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 import SidebarItem, { type SidebarItemProps } from './SidebarItem'
+import routes from '../routes'
 import logo from '../assets/icon.svg'
 
 type SidebarProps = {
@@ -12,18 +12,13 @@ type SidebarProps = {
 
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 	const navigate = useNavigate()
-	const navItems: Omit<SidebarItemProps, 'collapsed'>[] = [
-		{
-			name: 'New Recording',
-			icon: AiOutlineVideoCamera,
-			onClick: () => navigate('/record'),
-		},
-		{
-			name: 'View Recordings',
-			icon: AiOutlineFolderOpen,
-			onClick: () => navigate('/recordings'),
-		},
-	]
+	const settings = routes[routes.length - 1]
+	const navItems: Omit<SidebarItemProps, 'collapsed'>[] = routes
+		.slice(0, routes.length - 1)
+		.map((route) => ({
+			...route,
+			onClick: () => navigate(route.path),
+		}))
 
 	return (
 		<Flex
@@ -98,9 +93,9 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 			<Box className="sidebar-footer">
 				<Divider />
 				<SidebarItem
-					name="Settings"
-					icon={BiCog}
-					onClick={() => navigate('/settings')}
+					name={settings.name}
+					icon={settings.icon}
+					onClick={() => navigate(settings.path)}
 					collapsed={collapsed}
 				/>
 			</Box>
