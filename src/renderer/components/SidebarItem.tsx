@@ -25,7 +25,7 @@ export default function SidebarItem({ name, icon, onClick, collapsed }: SidebarI
 			transition="all 0.3s ease"
 			whiteSpace="nowrap"
 			cursor="pointer"
-			bg={colorMode === 'light' ? 'gray.200' : 'gray.800'}
+			bg={colorMode === 'light' ? 'gray.100' : 'gray.800'}
 			onClick={onClick}
 			userSelect="none"
 			_before={{

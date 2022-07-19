@@ -23,7 +23,7 @@ export const createWindow = async () => {
 		minWidth: 1200,
 		minHeight: 640,
 		frame: false,
-		icon: getAsset('icon.ico'),
+		icon: getAsset('icon.svg'),
 		webPreferences: {
 			// Allow devTools in development or debugging production build
 			devTools: !app.isPackaged || process.env.DEBUG_PROD === 'true',

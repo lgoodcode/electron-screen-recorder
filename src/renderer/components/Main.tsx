@@ -7,9 +7,7 @@ export default function Main() {
 		videoRef,
 	})
 
-	const handleGetSources = async () => {
-		window.ipcRenderer.send('getVideoSources')
-	}
+	const handleGetSources = () => window.videoStream.getVideoSources()
 
 	return (
 		<div className="w-full h-full flex flex-col">

@@ -25,9 +25,7 @@ export default function TitleBar() {
 	 * Get the initial state of the window if it's maximized on inital render
 	 */
 	useEffect(() => {
-		const isMaximized = async () => await window.mainWindow.isMaximized()
-
-		isMaximized().then(setMaximized)
+		window.mainWindow.isMaximized().then(setMaximized)
 	}, [])
 
 	return (

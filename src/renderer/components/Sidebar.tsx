@@ -28,7 +28,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 	return (
 		<Flex
 			className={`sidebar ${collapsed ? 'collapsed' : ''}`}
-			bg={useColorModeValue('gray.200', 'gray.800')}
+			bg={useColorModeValue('gray.100', 'gray.800')}
 			pos="relative"
 			h="full"
 			w={collapsed ? '5rem' : '300px'}

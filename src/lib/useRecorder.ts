@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const { ipcRenderer, processVideo } = window
+const { ipcRenderer, videoStream } = window
 
 export type StreamConstraintsOptions = {
 	minWidth?: number
@@ -83,12 +83,12 @@ export default function useRecorder(options?: useRecorderOptions) {
 		if (video) {
 			// Once the main process has sent the video sources, get the stream
 			// using the navigator, set the playback source, and create the recorder.
-			ipcRenderer.on('getVideoSources', (id) => {
+			videoStream.handleVideoSource((id: string) => {
 				// Need to set type to any because the chromeMediaSource properties
 				// are not part of the standard.
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const stream = (navigator.mediaDevices as any).getUserMedia(
-					getStreamConstraints(id as string, streamConstraints)
+					getStreamConstraints(id, streamConstraints)
 				)
 
 				// Set the stream to preview the video
@@ -122,7 +122,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 				})
 
 				// Ipc communication to main process
-				processVideo(await blob.arrayBuffer())
+				videoStream.processVideo(await blob.arrayBuffer())
 
 				// Done recording; remove stream, clear source flag, and reset chunks
 				setStream(null)
