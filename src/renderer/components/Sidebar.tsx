@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import SidebarItem, { type SidebarItemProps } from './SidebarItem'
 import routes from '../routes'
-import logo from '../assets/icon.svg'
+import logo from '../assets/icon.png'
 
 type SidebarProps = {
 	collapsed: boolean
