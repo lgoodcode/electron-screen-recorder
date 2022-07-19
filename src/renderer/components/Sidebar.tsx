@@ -67,8 +67,6 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 						cursor="pointer"
 						color={useColorModeValue('gray.600', 'whiteAlpha.800')}
 						borderColor={useColorModeValue('gray.500', 'gray.600')}
-						transform={collapsed ? 'rotate(180deg)' : 'rotate(0deg)'}
-						transition="all 0.5s ease"
 						_hover={{
 							bg: useColorModeValue('gray.300', 'gray.700'),
 							color: useColorModeValue('gray.700', 'whiteAlpha.900'),
@@ -77,7 +75,13 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 							bg: useColorModeValue('gray.400', 'gray.600'),
 						}}
 					>
-						<Icon as={AiOutlineArrowLeft} h={5} w={5} />
+						<Icon
+							as={AiOutlineArrowLeft}
+							h={5}
+							w={5}
+							transform={collapsed ? 'rotate(180deg)' : 'rotate(0deg)'}
+							transition="all 0.5s ease"
+						/>
 					</Flex>
 				</Box>
 			</Flex>
