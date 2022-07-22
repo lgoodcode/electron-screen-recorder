@@ -30,8 +30,9 @@ contextBridge.exposeInMainWorld('videoStream', {
 	// Specify the default handler type to satisfy the `on` handler but the
 	// actual argument is going to be the id string of the selected video source.
 	handleVideoSource: (handler: (...args: unknown[]) => void) =>
-		ipcRenderer.on('getVideoSources', handler),
-	processVideo: (ab: ArrayBuffer) => ipcRenderer.send('processVideo', ab),
+		ipcRenderer.on('getVideoSources', (_event, args: unknown[]) => handler(args)),
+	// processVideo: (ab: ArrayBuffer) => ipcRenderer.send('processVideo', ab),
+	processVideo: async (ab: ArrayBuffer) => await ipcRenderer.invoke('processVideo', ab),
 })
 
 /**

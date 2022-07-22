@@ -11,7 +11,7 @@ export type Channels = VideoStreamChannels | SettingsChannels | MainWindowChanne
 declare global {
 	interface Window {
 		ipcRenderer: {
-			send(channel: Channels, args?: unknown[]): void
+			send(channel: Channels, args?: any[]): void
 			on(channel: Channels, listener: (...args: any[]) => void): (() => void) | undefined
 			once(channel: Channels, listener: (...args: any[]) => void): void
 			off(channel: Channels): void
@@ -26,7 +26,16 @@ declare global {
 			 * @param handler the function to handle the selected video source id
 			 */
 			handleVideoSource(handler: (id: string) => void): void
-			processVideo(ab: ArrayBuffer): void
+			/**
+			 * Passed the ArrayBuffer of the video stream to the main process where
+			 * the user will be prompted to save the video file.
+			 *
+			 * @param ab the ArrayBuffer of the video stream
+			 * @returns `canceled` if the user canceled the save dialog, `failed` if
+			 * an error occurred while saving the video file, or `succeess` if the
+			 * video file was saved successfully.
+			 */
+			processVideo(ab: ArrayBuffer): Promise<'cancelled' | 'failed' | 'success'>
 		}
 
 		settings: {
@@ -50,7 +59,7 @@ declare global {
 	namespace Electron {
 		interface IpcMain {
 			on(channel: Channels, listener: (event: IpcMainEvent, ...args: any[]) => void): this
-			once(channel: Channels, listener: (...args: unknown[]) => void): void
+			once(channel: Channels, listener: (...args: any[]) => void): void
 			handle(channel: Channels, listener: (event: IpcMainInvokeEvent, ...args: any[]) => void): this
 		}
 	}

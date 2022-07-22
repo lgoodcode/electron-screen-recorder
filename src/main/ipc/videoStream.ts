@@ -1,6 +1,10 @@
 import { ipcMain, desktopCapturer, Menu, dialog } from 'electron'
 import { writeFile } from 'fs'
+import { join } from 'path'
+import Store from 'electron-store'
 import validateIpcSender from '../../lib/validateIpcSender'
+
+const store = new Store()
 
 /**
  * Handles the `getVideoSources` message from the renderer process.
@@ -27,7 +31,7 @@ ipcMain.on('getVideoSources', async (event) => {
  * Used to listen to for when receiving a video with the ArrayBuffer of the
  * stream from the renderer process, prompt where to save the video.
  */
-ipcMain.on('processVideo', async (event, ab) => {
+ipcMain.handle('processVideo', async (event, ab) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	if (!ab) {
@@ -35,15 +39,19 @@ ipcMain.on('processVideo', async (event, ab) => {
 	}
 
 	const buffer = Buffer.from(ab)
-
+	const recordingsDir = store.get('recordingsDir') as string
 	const { filePath } = await dialog.showSaveDialog({
+		title: 'Save video',
 		buttonLabel: 'Save video',
-		defaultPath: `recording-${Date.now()}.webm`,
+		defaultPath: join(recordingsDir, `recording-${Date.now()}.webm`),
 	})
 
-	if (filePath) {
-		writeFile(filePath, buffer, () => event.reply('processVideo'))
-	} else {
-		event.reply('processVideo', 'No path seletected. Aborted saving video.')
-	}
+	if (!filePath) return 'cancelled'
+
+	return new Promise<string>((res) => {
+		writeFile(filePath, buffer, (err) => {
+			if (err) return res('failed')
+			return res('success')
+		})
+	})
 })

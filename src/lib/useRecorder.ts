@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const { ipcRenderer, videoStream } = window
+const VIDEO_ENCODING = 'video/webm;codecs=vp9'
 
 export type StreamConstraintsOptions = {
 	minWidth?: number
@@ -24,16 +24,31 @@ const getStreamConstraints = (id: string, options?: StreamConstraintsOptions) =>
 	},
 })
 
+const getStream = async (id: string, streamConstraints?: StreamConstraintsOptions) => {
+	if (!id) return null
+	// Need to set type to any because the chromeMediaSource properties
+	// are not part of the standard.
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return await (navigator.mediaDevices as any).getUserMedia(
+		getStreamConstraints(id, streamConstraints)
+	)
+}
+
+const getCurrentStreamId = () => localStorage.getItem('currentStreamId') || ''
+
+const setCurrentStreamId = (id: string) => localStorage.setItem('currentStreamId', id)
+
+const clearCurrentStreamId = () => localStorage.removeItem('currentStreamId')
+
 export type useRecorderOptions = {
 	videoRef?: React.RefObject<HTMLVideoElement>
 	streamConstraints?: StreamConstraintsOptions
 }
 
-/**
- * useRecorder hook. Used to manage the recording process of desktop sources.
- */
 export default function useRecorder(options?: useRecorderOptions) {
 	const { videoRef, streamConstraints } = options || {}
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState('')
 	const [video, setVideo] = useState<HTMLVideoElement | null>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
 	const [recorder, setRecorder] = useState<MediaRecorder | null>(null)
@@ -41,16 +56,19 @@ export default function useRecorder(options?: useRecorderOptions) {
 	const [hasSource, setHasSource] = useState(false)
 	const [recording, setRecording] = useState(false)
 	const [processing, setProcessing] = useState(false)
-	const recorderOptions = { mimeType: 'video/webm;codecs=vp9' }
+	const recorderOptions = { mimeType: VIDEO_ENCODING }
 
 	const startRecording = () => {
 		if (recorder) {
 			recorder.start()
 			setRecording(true)
+			setError('')
 		}
 	}
 
 	const stopRecording = () => {
+		clearCurrentStreamId()
+
 		if (recorder) {
 			recorder.stop()
 			setRecording(false)
@@ -62,8 +80,18 @@ export default function useRecorder(options?: useRecorderOptions) {
 		}
 	}
 
+	const setVideoStream = (video: HTMLVideoElement, stream: MediaStream) => {
+		video.srcObject = stream
+		video.onloadeddata = () => video.play()
+
+		setStream(stream)
+		setHasSource(true)
+	}
+
 	/**
-	 * If a video element was passed in to manage, set it in state. Because React
+	 * Initialize video element state
+	 *
+	 * If a video element was passed in to be used, set it in state. Because React
 	 * will re-render and execute this useEffect hook because the videoRef will
 	 * change, we check if the video element is already set to not repeat it.
 	 */
@@ -74,94 +102,83 @@ export default function useRecorder(options?: useRecorderOptions) {
 	}, [videoRef?.current])
 
 	/**
-	 * Once the video element is set, we setup the listener on the renderer
-	 * process for when the user selects a video source. When selected, we
-	 * get the id and get the stream and set it to the video element for
-	 * previewing.
+	 * Initialize the stream state and source selection handler
+	 *
+	 * Once the video element is set, we first check if there is a stream id in
+	 * the localStorage and if so, we get the stream and set it to the video.
+	 *
+	 * Sets the handler to listen for when a video source is selected and to
+	 * get the stream and set it to the video.
 	 */
 	useEffect(() => {
 		if (video) {
+			const currentStreamId = getCurrentStreamId()
+
+			if (!currentStreamId) {
+				setLoading(false)
+			} else {
+				getStream(currentStreamId, streamConstraints).then((stream) => {
+					setLoading(false)
+					setVideoStream(video, stream)
+				})
+			}
+
 			// Once the main process has sent the video sources, get the stream
 			// using the navigator, set the playback source, and create the recorder.
-			videoStream.handleVideoSource((id: string) => {
-				// Need to set type to any because the chromeMediaSource properties
-				// are not part of the standard.
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const stream = (navigator.mediaDevices as any).getUserMedia(
-					getStreamConstraints(id, streamConstraints)
-				)
+			window.videoStream.handleVideoSource(async (id: string) => {
+				setCurrentStreamId(id)
 
-				// Set the stream to preview the video
-				video.srcObject = stream
-				// Play video when stream is loaded
-				video.onloadeddata = () => video.play()
-
-				setStream(stream)
+				setVideoStream(video, await getStream(id, streamConstraints))
 			})
 		}
 	}, [video])
 
 	/**
+	 * Handle the recording process
+	 *
 	 * Whenever a stream is set, by the user selecting a new source to record,
 	 * we create and set a new recorder for that stream. We set the event
 	 * listeners for the recorder on recording and when stopped.
 	 */
 	useEffect(() => {
-		if (stream) {
+		if (stream && video) {
 			const newRecorder = new MediaRecorder(stream, recorderOptions)
-
 			// When recording, add the chunks to the chunks array
-			newRecorder.addEventListener('dataavailable', (e) => {
-				chunks.push(e.data)
-			})
-
+			const handleRecording = (e: BlobEvent) => chunks.push(e.data)
 			// When done recording, create a blob and send it to the main process
-			newRecorder.addEventListener('stop', async () => {
-				const blob = new Blob(chunks, {
-					type: 'video/webm; codecs=vp9',
-				})
-
-				// Ipc communication to main process
-				videoStream.processVideo(await blob.arrayBuffer())
-
+			const handleStop = async () => {
+				const blob = new Blob(chunks, { type: VIDEO_ENCODING })
 				// Done recording; remove stream, clear source flag, and reset chunks
 				setStream(null)
 				setHasSource(false)
 				setChunks([])
-			})
+				// Process video
+				const result = await window.videoStream.processVideo(await blob.arrayBuffer())
+				// Reset the video source
+				video.srcObject = null
+				// Completed video processing
+				setProcessing(false)
+				// If there was an error, set it in state
+				if (result === 'failed') {
+					setError('Failed to save video')
+				}
+			}
 
-			// Set source flag and recorder
-			setHasSource(true)
+			newRecorder.addEventListener('dataavailable', handleRecording)
+			newRecorder.addEventListener('stop', handleStop)
+
 			setRecorder(newRecorder)
+
+			return () => {
+				newRecorder.removeEventListener('dataavailable', handleRecording)
+				newRecorder.removeEventListener('stop', handleStop)
+			}
 		}
 	}, [stream])
 
-	/**
-	 * Once a video element is set, we want to start listening for when the
-	 * main process has finished processing the video that was sent when the
-	 * recording concluded.
-	 */
-	useEffect(() => {
-		if (video) {
-			ipcRenderer.on('processVideo', (err) => {
-				if (err) {
-					console.warn(err)
-				} else {
-					console.log('Video processed')
-				}
-
-				if (video) {
-					video.srcObject = null
-				}
-
-				setProcessing(false)
-			})
-		}
-		// Cleanup, remove event listener if video is changed
-		return () => ipcRenderer.off('processVideo')
-	}, [video])
-
 	return {
+		loading,
+		error,
 		hasSource,
 		recording,
 		processing,

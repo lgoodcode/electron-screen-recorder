@@ -48,7 +48,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 					pointerEvents={collapsed ? 'none' : 'auto'}
 				>
 					<Box className="logo" mr="1rem" h={10} w={10} pos="relative">
-						<Image src={logo} bg={useColorModeValue('gray.900', 'transparent')} />
+						<Image src={logo} bg="transparent" />
 					</Box>
 
 					<Text className="logo-name" whiteSpace="nowrap">
@@ -56,40 +56,41 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 					</Text>
 				</Flex>
 
-				<Box className="sidebar-button" pos="absolute" right={8}>
-					<Flex
-						aria-label="Collapse sidebar"
-						onClick={() => setCollapsed(collapsed)}
-						p={3}
-						bg="transparent"
-						border="1px solid"
-						borderRadius="md"
-						cursor="pointer"
-						color={useColorModeValue('gray.600', 'whiteAlpha.800')}
-						borderColor={useColorModeValue('gray.500', 'gray.600')}
-						_hover={{
-							bg: useColorModeValue('gray.300', 'gray.700'),
-							color: useColorModeValue('gray.700', 'whiteAlpha.900'),
-						}}
-						_active={{
-							bg: useColorModeValue('gray.400', 'gray.600'),
-						}}
-					>
-						<Icon
-							as={AiOutlineArrowLeft}
-							h={5}
-							w={5}
-							transform={collapsed ? 'rotate(180deg)' : 'rotate(0deg)'}
-							transition="all 0.5s ease"
-						/>
-					</Flex>
-				</Box>
+				<Flex
+					className="sidebar-button"
+					pos="absolute"
+					right={8}
+					aria-label="Collapse sidebar"
+					onClick={() => setCollapsed(collapsed)}
+					p={3}
+					bg="transparent"
+					border="1px solid"
+					borderRadius="md"
+					cursor="pointer"
+					color={useColorModeValue('gray.600', 'whiteAlpha.800')}
+					borderColor={useColorModeValue('gray.500', 'gray.600')}
+					_hover={{
+						bg: useColorModeValue('gray.300', 'gray.700'),
+						color: useColorModeValue('gray.700', 'whiteAlpha.900'),
+					}}
+					_active={{
+						bg: useColorModeValue('gray.400', 'gray.600'),
+					}}
+				>
+					<Icon
+						as={AiOutlineArrowLeft}
+						h={5}
+						w={5}
+						transform={collapsed ? 'rotate(180deg)' : 'rotate(0deg)'}
+						transition="all 0.5s ease"
+					/>
+				</Flex>
 			</Flex>
 
 			<Box className="sidebar-body" top="40px" pos="relative">
 				<Box mt={8}>
 					{navItems.map((props) => (
-						<SidebarItem {...{ ...props, collapsed }} />
+						<SidebarItem key={props.name} {...{ ...props, collapsed }} />
 					))}
 				</Box>
 			</Box>

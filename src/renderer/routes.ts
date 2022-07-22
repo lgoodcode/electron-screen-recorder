@@ -7,7 +7,7 @@ import Settings from './pages/Settings'
 export default [
 	{
 		name: 'New Recording',
-		path: '/record',
+		path: '/',
 		Element: Record,
 		icon: AiOutlineVideoCamera,
 	},

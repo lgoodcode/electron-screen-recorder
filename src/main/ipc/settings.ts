@@ -9,10 +9,10 @@ const store = new Store()
 /**
  * Initialize the recordings location from config file
  */
-if (!store.has('recordings')) {
+if (!store.has('recordingsDir')) {
 	const path = join(app.getPath('userData'), 'recordings')
 
-	store.set('recordings', path)
+	store.set('recordingsDir', path)
 
 	stat(path, (err) => {
 		if (err) {
@@ -28,7 +28,7 @@ if (!store.has('recordings')) {
 ipcMain.handle('getRecordingsDir', (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
-	return store.get('recordings')
+	return store.get('recordingsDir')
 })
 
 ipcMain.handle('selectRecordingsDir', async (event) => {
@@ -36,7 +36,7 @@ ipcMain.handle('selectRecordingsDir', async (event) => {
 
 	const { filePaths } = await dialog.showOpenDialog({
 		properties: ['openDirectory'],
-		title: 'test',
+		title: 'Select recordings directory',
 	})
 
 	return filePaths[0]
@@ -57,7 +57,7 @@ ipcMain.handle('updateRecordingsDir', (event, path) => {
 			}
 
 			// Update the recordings directory
-			store.set('recordings', path)
+			store.set('recordingsDir', path)
 
 			res(true)
 		})
