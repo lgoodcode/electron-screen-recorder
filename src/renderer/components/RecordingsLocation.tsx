@@ -10,6 +10,7 @@ import {
 	IconButton,
 	Icon,
 	HStack,
+	useToast,
 	type BoxProps,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
@@ -22,6 +23,15 @@ export default function RecordsLocation(props: BoxProps) {
 	const [path, setPath] = useState('')
 	// Temporary path to be used while editing
 	const [newPath, setNewPath] = useState('')
+
+	const toast = useToast({
+		status: 'success',
+		position: 'top-right',
+		isClosable: true,
+		containerStyle: {
+			transform: 'translateY(32px)',
+		},
+	})
 
 	const handleSelectDir = async () => {
 		const dir = await window.settings.selectRecordingsDir()
@@ -40,6 +50,7 @@ export default function RecordsLocation(props: BoxProps) {
 			if (valid) {
 				setPath(newPath)
 				setEditMode(false)
+				toast({ description: 'Updated recordings directory' })
 			}
 		})
 	}

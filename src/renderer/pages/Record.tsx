@@ -1,5 +1,7 @@
-import { Box, Button, Divider, Flex, Heading, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Heading, Icon, useToast } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
+import { MdOutlineOndemandVideo } from 'react-icons/md'
+import { BsFillRecordFill, BsFillStopFill } from 'react-icons/bs'
 import useRecorder from '../../lib/useRecorder'
 
 export default function Record() {
@@ -11,7 +13,6 @@ export default function Record() {
 	const handleGetSources = () => window.videoStream.getVideoSources()
 	const toast = useToast({
 		position: 'top-right',
-		duration: 5000,
 		isClosable: true,
 		status: 'error',
 		containerStyle: {
@@ -26,7 +27,7 @@ export default function Record() {
 	}, [error])
 
 	return (
-		<Flex className="record-page" h="full" pos="relative" flexDir="column">
+		<Flex className="record-page" h="full" pos="relative" flexDir="column" pb={4}>
 			<Box className="heading">
 				<Heading as="h1">Record</Heading>
 				<Divider mt={2} />
@@ -52,6 +53,7 @@ export default function Record() {
 			<Flex className="video-buttons" justifyContent="space-between">
 				<Box>
 					<Button disabled={recording || processing} onClick={handleGetSources}>
+						<Icon as={MdOutlineOndemandVideo} mr={2} />
 						Select Source
 					</Button>
 				</Box>
@@ -64,6 +66,7 @@ export default function Record() {
 						disabled={!hasSource || recording || processing}
 						onClick={startRecording}
 					>
+						<Icon as={BsFillRecordFill} mr={2} />
 						Record
 					</Button>
 				) : (
@@ -74,6 +77,7 @@ export default function Record() {
 						disabled={!hasSource || !recording || processing}
 						onClick={stopRecording}
 					>
+						<Icon as={BsFillStopFill} mr={2} />
 						Stop
 					</Button>
 				)}
