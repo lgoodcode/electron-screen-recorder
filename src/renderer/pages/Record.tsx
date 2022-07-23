@@ -1,6 +1,7 @@
 import {
 	Box,
 	Button,
+	Center,
 	Divider,
 	Flex,
 	Heading,
@@ -52,26 +53,34 @@ export default function Record() {
 				<Divider mt={2} />
 			</Box>
 
-			<Flex className="video-container" h="full" align="center" justify="center">
-				{loading && <Spinner size="xl" />}
+			{(loading || !hasSource) && (
+				<Center className="no-source" h="full">
+					{!loading && !hasSource && (
+						<Heading as="h2" size="md">
+							Select a video source to record
+						</Heading>
+					)}
 
-				{!loading && !hasSource && (
-					<Heading as="h2" size="md">
-						Select a video source to record
-					</Heading>
-				)}
+					{loading && hasSource && <Spinner size="xl" />}
+				</Center>
+			)}
 
-				<video
-					ref={videoRef}
-					style={{
-						width: '100%',
-						height: '600px',
-						display: !hasSource ? 'none' : 'block',
-					}}
-				></video>
+			<Flex
+				className="video-container"
+				mt={8}
+				h="full"
+				minH="560px"
+				align="center"
+				justify="center"
+				display={hasSource ? 'flex' : 'none'}
+				style={{
+					aspectRatio: '16 / 9',
+				}}
+			>
+				<video ref={videoRef} style={{ height: '100%' }}></video>
 			</Flex>
 
-			<Flex className="video-buttons" justifyContent="space-between">
+			<Flex className="video-buttons" mt={8} justifyContent="space-between">
 				<Box>
 					<Button disabled={recording || processing} onClick={handleGetSources}>
 						<Icon as={MdOutlineOndemandVideo} mr={2} />

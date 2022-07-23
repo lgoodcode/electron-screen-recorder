@@ -19,7 +19,7 @@ export const createWindow = async () => {
 	mainWindow = new BrowserWindow({
 		show: false,
 		// Give extra width for the devTools
-		width: process.env.NODE_ENV !== 'production' ? 1300 : 800,
+		width: process.env.NODE_ENV !== 'production' ? 1400 : 1056,
 		height: 800,
 		minWidth: 768,
 		minHeight: 800,
