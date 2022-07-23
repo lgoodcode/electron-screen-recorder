@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { Channels } from 'preload'
 
+ipcRenderer.on('will-quit', () => localStorage.removeItem('currentStreamId'))
+
 contextBridge.exposeInMainWorld('ipcRenderer', {
 	send(channel: Channels, args: unknown[]) {
 		ipcRenderer.send(channel, args)
@@ -33,6 +35,11 @@ contextBridge.exposeInMainWorld('videoStream', {
 		ipcRenderer.on('getVideoSources', (_event, args: unknown[]) => handler(args)),
 	// processVideo: (ab: ArrayBuffer) => ipcRenderer.send('processVideo', ab),
 	processVideo: async (ab: ArrayBuffer) => await ipcRenderer.invoke('processVideo', ab),
+	currentStream: {
+		get: async () => await ipcRenderer.invoke('getCurrentStream'),
+		set: (id: string) => ipcRenderer.send('setCurrentStream', id),
+		clear: () => ipcRenderer.send('clearCurrentStream'),
+	},
 })
 
 /**

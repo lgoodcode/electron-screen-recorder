@@ -1,4 +1,14 @@
-import { Box, Button, Divider, Flex, Heading, HStack, Icon, useToast } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	Divider,
+	Flex,
+	Heading,
+	HStack,
+	Icon,
+	Spinner,
+	useToast,
+} from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
 import { MdOutlineOndemandVideo } from 'react-icons/md'
 import { BsFillRecordFill, BsFillStopFill } from 'react-icons/bs'
@@ -43,6 +53,8 @@ export default function Record() {
 			</Box>
 
 			<Flex className="video-container" h="full" align="center" justify="center">
+				{loading && <Spinner size="xl" />}
+
 				{!loading && !hasSource && (
 					<Heading as="h2" size="md">
 						Select a video source to record

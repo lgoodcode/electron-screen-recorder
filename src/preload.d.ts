@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export type VideoStreamChannels = 'getVideoSources' | 'processVideo'
+export type VideoStreamChannels =
+	| 'getVideoSources'
+	| 'processVideo'
+	| 'getCurrentStream'
+	| 'setCurrentStream'
+	| 'clearCurrentStream'
 
 export type SettingsChannels = 'getRecordingsDir' | 'selectRecordingsDir' | 'updateRecordingsDir'
 
@@ -36,6 +41,12 @@ declare global {
 			 * video file was saved successfully.
 			 */
 			processVideo(ab: ArrayBuffer): Promise<'cancelled' | 'failed' | 'success'>
+
+			currentStream: {
+				get(): Promise<string>
+				set(id: string): void
+				clear(): void
+			}
 		}
 
 		settings: {

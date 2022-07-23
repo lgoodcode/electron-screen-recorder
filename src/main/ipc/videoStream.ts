@@ -1,10 +1,8 @@
-import { ipcMain, desktopCapturer, Menu, dialog } from 'electron'
+import { app, desktopCapturer, dialog, ipcMain, Menu } from 'electron'
 import { writeFile } from 'fs'
 import { join } from 'path'
-import Store from 'electron-store'
+import store from './store'
 import validateIpcSender from '../../lib/validateIpcSender'
-
-const store = new Store()
 
 /**
  * Handles the `getVideoSources` message from the renderer process.
@@ -39,11 +37,10 @@ ipcMain.handle('processVideo', async (event, ab) => {
 	}
 
 	const buffer = Buffer.from(ab)
-	const recordingsDir = store.get('recordingsDir') as string
 	const { filePath } = await dialog.showSaveDialog({
 		title: 'Save video',
 		buttonLabel: 'Save video',
-		defaultPath: join(recordingsDir, `recording-${Date.now()}.webm`),
+		defaultPath: join(store.get('recordingsDir'), `recording-${Date.now()}.webm`),
 	})
 
 	if (!filePath) return 'cancelled'
@@ -54,4 +51,26 @@ ipcMain.handle('processVideo', async (event, ab) => {
 			return res('success')
 		})
 	})
+})
+
+ipcMain.handle('getCurrentStream', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	return store.get('currentStream', '')
+})
+
+ipcMain.on('setCurrentStream', (event, id) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	store.set('currentStream', id)
+})
+
+ipcMain.on('clearCurrentStream', (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	store.delete('currentStream')
+})
+
+app.on('before-quit', () => {
+	store.delete('currentStream')
 })

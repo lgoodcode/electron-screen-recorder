@@ -1,10 +1,8 @@
 import { app, dialog, ipcMain } from 'electron'
 import { stat, mkdir } from 'fs'
 import { join } from 'path'
-import Store from 'electron-store'
+import store from './store'
 import validateIpcSender from '../../lib/validateIpcSender'
-
-const store = new Store()
 
 /**
  * Initialize the recordings location from config file

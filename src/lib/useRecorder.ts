@@ -34,12 +34,6 @@ const getStream = async (id: string, streamConstraints?: StreamConstraintsOption
 	)
 }
 
-const getCurrentStreamId = () => localStorage.getItem('currentStreamId') || ''
-
-const setCurrentStreamId = (id: string) => localStorage.setItem('currentStreamId', id)
-
-const clearCurrentStreamId = () => localStorage.removeItem('currentStreamId')
-
 export type useRecorderOptions = {
 	videoRef?: React.RefObject<HTMLVideoElement>
 	streamConstraints?: StreamConstraintsOptions
@@ -67,7 +61,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 	}
 
 	const stopRecording = () => {
-		clearCurrentStreamId()
+		window.videoStream.currentStream.clear()
 
 		if (recorder) {
 			recorder.stop()
@@ -82,7 +76,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 	}
 
 	const cancelRecording = () => {
-		clearCurrentStreamId()
+		window.videoStream.currentStream.clear()
 
 		setStream(null)
 		setHasSource(false)
@@ -131,21 +125,21 @@ export default function useRecorder(options?: useRecorderOptions) {
 	 */
 	useEffect(() => {
 		if (video) {
-			const currentStreamId = getCurrentStreamId()
-
-			if (!currentStreamId) {
-				setLoading(false)
-			} else {
-				getStream(currentStreamId, streamConstraints).then((stream) => {
+			window.videoStream.currentStream.get().then((id: string) => {
+				if (!id) {
 					setLoading(false)
-					setVideoStream(video, stream)
-				})
-			}
+				} else {
+					getStream(id, streamConstraints).then((stream) => {
+						setLoading(false)
+						setVideoStream(video, stream)
+					})
+				}
+			})
 
 			// Once the main process has sent the video sources, get the stream
 			// using the navigator, set the playback source, and create the recorder.
 			window.videoStream.handleVideoSource(async (id: string) => {
-				setCurrentStreamId(id)
+				window.videoStream.currentStream.set(id)
 
 				setVideoStream(video, await getStream(id, streamConstraints))
 			})
