@@ -73,10 +73,29 @@ export default function useRecorder(options?: useRecorderOptions) {
 			recorder.stop()
 			setRecording(false)
 			setProcessing(true)
+		}
 
-			if (video) {
-				video.pause()
-			}
+		if (video) {
+			video.pause()
+			video.srcObject = null
+		}
+	}
+
+	const cancelRecording = () => {
+		clearCurrentStreamId()
+
+		setStream(null)
+		setHasSource(false)
+		setChunks([])
+
+		if (recorder) {
+			recorder.pause()
+			setRecording(false)
+		}
+
+		if (video) {
+			video.pause()
+			video.srcObject = null
 		}
 	}
 
@@ -154,8 +173,6 @@ export default function useRecorder(options?: useRecorderOptions) {
 				setChunks([])
 				// Process video
 				const result = await window.videoStream.processVideo(await blob.arrayBuffer())
-				// Reset the video source
-				video.srcObject = null
 				// Completed video processing
 				setProcessing(false)
 				// If there was an error, set it in state
@@ -185,5 +202,6 @@ export default function useRecorder(options?: useRecorderOptions) {
 		setVideo,
 		startRecording,
 		stopRecording,
+		cancelRecording,
 	}
 }

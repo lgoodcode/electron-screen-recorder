@@ -1,15 +1,24 @@
-import { Box, Button, Divider, Flex, Heading, Icon, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Heading, HStack, Icon, useToast } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
 import { MdOutlineOndemandVideo } from 'react-icons/md'
 import { BsFillRecordFill, BsFillStopFill } from 'react-icons/bs'
 import useRecorder from '../../lib/useRecorder'
+import { AiOutlineStop } from 'react-icons/ai'
 
 export default function Record() {
 	const videoRef = useRef<HTMLVideoElement>(null)
-	const { loading, error, hasSource, recording, processing, startRecording, stopRecording } =
-		useRecorder({
-			videoRef,
-		})
+	const {
+		loading,
+		error,
+		hasSource,
+		recording,
+		processing,
+		startRecording,
+		stopRecording,
+		cancelRecording,
+	} = useRecorder({
+		videoRef,
+	})
 	const handleGetSources = () => window.videoStream.getVideoSources()
 	const toast = useToast({
 		position: 'top-right',
@@ -70,16 +79,29 @@ export default function Record() {
 						Record
 					</Button>
 				) : (
-					<Button
-						bg="yellow.500"
-						_hover={{ bg: 'yellow.600' }}
-						_active={{ bg: 'yellow.700' }}
-						disabled={!hasSource || !recording || processing}
-						onClick={stopRecording}
-					>
-						<Icon as={BsFillStopFill} mr={2} />
-						Stop
-					</Button>
+					<HStack spacing={4}>
+						<Button
+							bg="yellow.500"
+							_hover={{ bg: 'yellow.600' }}
+							_active={{ bg: 'yellow.700' }}
+							disabled={!hasSource || !recording || processing}
+							onClick={cancelRecording}
+						>
+							<Icon as={AiOutlineStop} mr={2} />
+							Cancel
+						</Button>
+
+						<Button
+							bg="red.500"
+							_hover={{ bg: 'red.600' }}
+							_active={{ bg: 'red.700' }}
+							disabled={!hasSource || !recording || processing}
+							onClick={stopRecording}
+						>
+							<Icon as={BsFillStopFill} mr={2} />
+							Stop
+						</Button>
+					</HStack>
 				)}
 			</Flex>
 		</Flex>
