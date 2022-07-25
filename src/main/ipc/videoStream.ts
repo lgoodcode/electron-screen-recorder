@@ -1,8 +1,16 @@
 import { app, desktopCapturer, dialog, ipcMain, Menu } from 'electron'
-import { writeFile } from 'fs'
+import { readdir, readFile, writeFile } from 'fs'
 import { join } from 'path'
+import { promisify } from 'util'
 import store from './store'
 import validateIpcSender from '../../lib/validateIpcSender'
+
+const timestamp = () =>
+	new Date()
+		.toLocaleString('en-us', { hour12: false })
+		.replace(/\//g, '_')
+		.replace(', ', '_')
+		.replace(/:/g, '_')
 
 /**
  * Handles the `getVideoSources` message from the renderer process.
@@ -40,17 +48,17 @@ ipcMain.handle('processVideo', async (event, ab) => {
 	const { filePath } = await dialog.showSaveDialog({
 		title: 'Save video',
 		buttonLabel: 'Save video',
-		defaultPath: join(store.get('recordingsDir'), `recording-${Date.now()}.webm`),
+		defaultPath: join(store.get('recordingsDir'), `recording-${timestamp()}.webm`),
 	})
 
 	if (!filePath) return 'cancelled'
 
-	return new Promise<string>((res) => {
-		writeFile(filePath, buffer, (err) => {
-			if (err) return res('failed')
-			return res('success')
+	return promisify(writeFile)(filePath, buffer)
+		.then(() => 'success')
+		.catch((err) => {
+			console.error(err)
+			return 'failed'
 		})
-	})
 })
 
 ipcMain.handle('getCurrentStream', (event) => {
@@ -71,6 +79,50 @@ ipcMain.on('clearCurrentStream', (event) => {
 	store.delete('currentStream')
 })
 
+/**
+ * Clear the current stream on app launch to prevent attempting to load an id
+ * that can't be found.
+ */
+app.on('ready', () => {
+	store.delete('currentStream')
+})
+
 app.on('before-quit', () => {
 	store.delete('currentStream')
+})
+
+ipcMain.handle('getRecordings', async (event) => {
+	if (!validateIpcSender(event.senderFrame)) return
+
+	return new Promise<Video[] | string>((resVideos) => {
+		readdir(store.get('recordingsDir'), async (err, files) => {
+			if (err) {
+				console.error(err)
+				resVideos(err.message)
+			}
+
+			const videos: Video[] = []
+
+			for (const file of files) {
+				if (!file.endsWith('.webm')) continue
+
+				const buffer = await promisify(readFile)(join(store.get('recordingsDir'), file)).catch(
+					(err: NodeJS.ErrnoException) => err
+				)
+
+				if (buffer instanceof Error) {
+					console.error(buffer)
+					resVideos(buffer.message)
+					return
+				}
+
+				videos.push({
+					name: file,
+					buffer,
+				})
+			}
+
+			resVideos(videos)
+		})
+	})
 })

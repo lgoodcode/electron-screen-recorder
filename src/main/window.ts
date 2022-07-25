@@ -3,7 +3,6 @@ import { join } from 'path'
 import { srcPreloadPath } from '../../config/paths'
 import getAsset from '../lib/getAsset'
 import resolveHtmlPath from '../lib/resolveHtmlPath'
-import MenuBuilder from './menu'
 
 export let mainWindow: BrowserWindow | null = null
 
@@ -50,9 +49,6 @@ export const createWindow = async () => {
 	// Load the index.html file. Will either be root of localhost in development
 	// or in the src path as a file:// url in production
 	mainWindow.loadURL(resolveHtmlPath('index.html'))
-
-	// Build the menu
-	new MenuBuilder(mainWindow).buildMenu()
 
 	// When window is ready, check settings and show minimized if needed
 	// otherwise show regular window and then check if in devention mode

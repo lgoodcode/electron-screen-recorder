@@ -37,7 +37,7 @@ export default function TitleBar() {
 			pos="fixed"
 			bg="gray.900"
 			color="white"
-			zIndex={10}
+			zIndex={999}
 		>
 			<Box id="drag-region" w="full" h="full">
 				{/* <Box pos="absolute" top={0} left={0} h={'32px'} w={'32px'}>

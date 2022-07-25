@@ -18,11 +18,13 @@ export default function Layout() {
 				className="wrapper"
 				flexDir="row"
 				h="100vh"
-				bg={useColorModeValue('white', 'gray.700')}
 				pt="32px"
+				overflow="hidden"
+				bg={useColorModeValue('white', 'gray.700')}
 			>
 				<Sidebar {...{ collapsed, setCollapsed }} />
 				<Box
+					className="main"
 					as="main"
 					py={4}
 					px={8}

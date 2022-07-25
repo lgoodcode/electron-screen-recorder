@@ -69,6 +69,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 					cursor="pointer"
 					color={useColorModeValue('gray.600', 'whiteAlpha.800')}
 					borderColor={useColorModeValue('gray.500', 'gray.600')}
+					transition="all 0.3s ease"
 					_hover={{
 						bg: useColorModeValue('gray.300', 'gray.700'),
 						color: useColorModeValue('gray.700', 'whiteAlpha.900'),

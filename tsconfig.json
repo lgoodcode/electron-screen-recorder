@@ -25,5 +25,5 @@
   },
 	"include": ["src/**/*", "scripts/*"],
   "exclude": ["./release"],
-	"files": ["assets/assets.d.ts"]
+	"files": ["assets/assets.d.ts", "src/preload.d.ts"]
 }

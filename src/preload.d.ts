@@ -6,6 +6,7 @@ export type VideoStreamChannels =
 	| 'getCurrentStream'
 	| 'setCurrentStream'
 	| 'clearCurrentStream'
+	| 'getRecordings'
 
 export type SettingsChannels = 'getRecordingsDir' | 'selectRecordingsDir' | 'updateRecordingsDir'
 
@@ -14,6 +15,11 @@ export type MainWindowChannels = 'isMaximized'
 export type Channels = VideoStreamChannels | SettingsChannels | MainWindowChannels
 
 declare global {
+	type Video = {
+		name: string
+		buffer: ArrayBufferLike
+	}
+
 	interface Window {
 		ipcRenderer: {
 			send(channel: Channels, args?: any[]): void
@@ -47,6 +53,17 @@ declare global {
 				set(id: string): void
 				clear(): void
 			}
+
+			/**
+			 * Retrieves the list of previously saved recordings. Reads the directory
+			 * configured in the settings for the location of the recordings. It then
+			 * iterates through each file and reads it, returning an array of `Video`
+			 * objects.
+			 *
+			 * If an error occurs while attempting to read the directory or
+			 * any of the files, it will return a string containing the error message.
+			 */
+			getRecordings(): Promise<Video[] | string>
 		}
 
 		settings: {

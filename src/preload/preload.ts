@@ -25,7 +25,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
  * videoStream API
  *
  * Handles dealing with the video stream and passing it between the main and
- * renderer processes.
+ * renderer processes. Manages the current stream and the retrieving previously
+ * saved recordings.
  */
 contextBridge.exposeInMainWorld('videoStream', {
 	getVideoSources: () => ipcRenderer.send('getVideoSources'),
@@ -40,6 +41,7 @@ contextBridge.exposeInMainWorld('videoStream', {
 		set: (id: string) => ipcRenderer.send('setCurrentStream', id),
 		clear: () => ipcRenderer.send('clearCurrentStream'),
 	},
+	getRecordings: async () => await ipcRenderer.invoke('getRecordings'),
 })
 
 /**

@@ -1,6 +1,6 @@
 import { session } from 'electron'
 
-const allowedPermissions: string[] = ['media']
+const allowedPermissions: string[] = ['media', 'fullscreen']
 
 /**
  * Electron doesn't use the environment variables at runtime. So we define
