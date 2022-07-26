@@ -1,5 +1,5 @@
 import { Box, Divider, Flex, Icon, Image, Text, useColorModeValue } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import SidebarItem, { type SidebarItemProps } from './SidebarItem'
 import routes from '../routes'
@@ -11,12 +11,14 @@ type SidebarProps = {
 }
 
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
+	const { pathname } = useLocation()
 	const navigate = useNavigate()
 	const settings = routes[routes.length - 1]
 	const navItems: Omit<SidebarItemProps, 'collapsed'>[] = routes
 		.slice(0, routes.length - 1)
 		.map((route) => ({
 			...route,
+			active: route.path === pathname,
 			onClick: () => navigate(route.path),
 		}))
 
@@ -103,6 +105,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
 					icon={settings.icon}
 					onClick={() => navigate(settings.path)}
 					collapsed={collapsed}
+					active={settings.path === pathname}
 				/>
 			</Box>
 		</Flex>

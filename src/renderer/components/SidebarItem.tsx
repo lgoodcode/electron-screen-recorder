@@ -1,4 +1,4 @@
-import { useColorModeValue, Icon, useColorMode, Box, Text, Tooltip } from '@chakra-ui/react'
+import { Icon, Text, Tooltip, Flex, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import type { IconType } from 'react-icons'
 
 export type SidebarItemProps = {
@@ -6,22 +6,22 @@ export type SidebarItemProps = {
 	icon: IconType
 	onClick: () => void
 	collapsed: boolean
+	active: boolean
 }
 
-export default function SidebarItem({ name, icon, onClick, collapsed }: SidebarItemProps) {
+export default function SidebarItem({ name, icon, onClick, collapsed, active }: SidebarItemProps) {
 	const { colorMode } = useColorMode()
 
 	return (
 		<Tooltip isDisabled={!collapsed} label={name} placement="right" left={4}>
-			<Box
+			<Flex
 				key={name}
 				className="sidebar-item"
 				borderRadius="md"
 				p={3}
 				mt={4}
-				display="flex"
 				position="relative"
-				alignItems="center"
+				align="center"
 				color={useColorModeValue('gray.600', 'whiteAlpha.700')}
 				transition="all 0.3s ease"
 				whiteSpace="nowrap"
@@ -30,16 +30,16 @@ export default function SidebarItem({ name, icon, onClick, collapsed }: SidebarI
 				onClick={onClick}
 				userSelect="none"
 				_before={{
-					opacity: 0,
+					opacity: active ? 1 : 0,
 					position: 'absolute',
 					content: '""',
 					transition: 'all 0.3s ease',
-					borderLeft: '4px solid',
-					borderLeftColor: useColorModeValue('gray.800', 'whiteAlpha.900'),
+					borderRight: '4px solid',
+					borderRightColor: useColorModeValue('gray.600', 'whiteAlpha.700'),
 					borderRadius: '2px',
-					left: '-1rem',
+					right: '-1rem',
 					height: '100%',
-					visibility: 'hidden',
+					visibility: active ? 'visible' : 'hidden',
 				}}
 				_hover={{
 					bg: useColorModeValue('gray.300', 'gray.700'),
@@ -48,6 +48,7 @@ export default function SidebarItem({ name, icon, onClick, collapsed }: SidebarI
 					_before: {
 						opacity: 1,
 						visibility: 'unset',
+						borderRightColor: useColorModeValue('gray.800', 'whiteAlpha.900'),
 					},
 				}}
 				_active={{
@@ -58,7 +59,7 @@ export default function SidebarItem({ name, icon, onClick, collapsed }: SidebarI
 				<Text as="span" opacity={collapsed ? 0 : 1} transition="opacity 0.3s ease">
 					{name}
 				</Text>
-			</Box>
+			</Flex>
 		</Tooltip>
 	)
 }
