@@ -88,8 +88,10 @@ export default function Recordings() {
 			<VStack
 				className="recordings"
 				mt={8}
+				px={4}
 				spacing={4}
 				display={recordings.length ? 'flex' : 'none'}
+				overflowY="auto"
 			>
 				{recordings.map((video) => (
 					<Box
@@ -97,7 +99,7 @@ export default function Recordings() {
 						className="recording-item"
 						w="full"
 						p={4}
-						bg={useColorModeValue('white', 'gray.800')}
+						bg={useColorModeValue('gray.100', 'gray.800')}
 						cursor="pointer"
 						borderRadius="md"
 						onClick={handleViewRecording(video)}
@@ -137,10 +139,12 @@ export default function Recordings() {
 						className="modal-content"
 						minW="600px"
 						maxW="50%"
-						bg={useColorModeValue('gray.100', 'gray.700')}
+						maxH="90vh"
+						w="auto"
+						bg={useColorModeValue('white', 'gray.700')}
 						borderRadius="md"
 						zIndex={1001}
-						transform={isOpen ? 'translateY(0)' : 'translateY(10%)'}
+						transform={isOpen ? 'translateY(0)' : 'translateY(100px)'}
 						transition="all 0.3s ease"
 					>
 						<Flex className="modal-header" px={6} py={4} align="center" justify="space-between">
@@ -167,7 +171,15 @@ export default function Recordings() {
 								justify="center"
 								style={{ aspectRatio: '16 / 9' }}
 							>
-								<video ref={videoRef} controls controlsList="nodownload"></video>
+								<video
+									ref={videoRef}
+									controls
+									controlsList="nodownload"
+									style={{
+										width: '100%',
+										maxHeight: '80vh',
+									}}
+								></video>
 							</Flex>
 						</Box>
 					</Box>

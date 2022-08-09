@@ -25,10 +25,10 @@ const server = new WebpackDevServer(devServerOptions, compiler)
 
 const startServer = async () => {
 	console.log(chalk.cyan('Starting preload file processing...'))
-	runScript('preload', 'npm', ['run', 'start:preload'])
+	runScript('preload', 'npm', ['run', 'dev:preload'])
 
 	console.log(chalk.cyan('Starting main process...'))
-	runScript('main', 'npm', ['run', 'start:main'])
+	runScript('main', 'npm', ['run', 'dev:main'])
 
 	console.log(chalk.cyan('Starting renderer server...'))
 	await server.start()

@@ -82,7 +82,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 		setHasSource(false)
 		setChunks([])
 
-		if (recorder) {
+		if (recorder && recorder.state === 'recording') {
 			recorder.pause()
 			setRecording(false)
 		}

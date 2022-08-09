@@ -91,6 +91,7 @@ export default function Record() {
 				{!recording ? (
 					<Button
 						bg="red.500"
+						color="white"
 						_hover={{ bg: 'red.600' }}
 						_active={{ bg: 'red.700' }}
 						disabled={!hasSource || recording || processing}
@@ -103,6 +104,7 @@ export default function Record() {
 					<HStack spacing={4}>
 						<Button
 							bg="yellow.500"
+							color="white"
 							_hover={{ bg: 'yellow.600' }}
 							_active={{ bg: 'yellow.700' }}
 							disabled={!hasSource || !recording || processing}
@@ -114,6 +116,7 @@ export default function Record() {
 
 						<Button
 							bg="red.500"
+							color="white"
 							_hover={{ bg: 'red.600' }}
 							_active={{ bg: 'red.700' }}
 							disabled={!hasSource || !recording || processing}

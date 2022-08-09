@@ -10,9 +10,9 @@
   },
   "scripts": {
     "clean": "ts-node scripts/clean.js --run",
-    "start": "cross-env NODE_ENV=development ts-node scripts/start.ts",
-    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register ./src/main/main.ts",
-    "start:preload": "webpack --config config/webpack.config.preload.ts",
+    "dev": "cross-env NODE_ENV=development ts-node scripts/start.ts",
+    "dev:main": "cross-env NODE_ENV=development electronmon -r ts-node/register ./src/main/main.ts",
+    "dev:preload": "webpack --config config/webpack.config.preload.ts",
     "build": "ts-node scripts/build.ts --run",
     "build:main": "cross-env NODE_ENV=production webpack --config config/webpack.config.main.ts",
     "build:renderer": "cross-env NODE_ENV=production webpack --config config/webpack.config.renderer.ts",
@@ -23,8 +23,8 @@
     "test:watch": "jest --watchAll"
   },
   "build": {
-    "productName": "Secure Electron Boilerplate",
-    "appId": "com.example.secure-electron-boilerplate",
+    "productName": "Electron Screen Recorder",
+    "appId": "com.electron.screen-recorder",
     "artifactName": "${productName}.${ext}",
     "directories": {
       "app": "release/app",
@@ -45,7 +45,7 @@
       ]
     },
     "nsis": {
-      "uninstallDisplayName": "Secure Electron Boilerplate"
+      "uninstallDisplayName": "Electron Screen Recorder"
     }
   },
   "lint-staged": {
