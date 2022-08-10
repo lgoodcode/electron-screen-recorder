@@ -23,13 +23,16 @@ if (!store.has('recordingsDir')) {
 	})
 }
 
-ipcMain.handle('getRecordingsDir', (event) => {
+/**
+ * Retrieves the recordings location from config file
+ */
+ipcMain.handle('settings:recDir::get', (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	return store.get('recordingsDir')
 })
 
-ipcMain.handle('selectRecordingsDir', async (event) => {
+ipcMain.handle('settings:recDir::select', async (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	const { filePaths } = await dialog.showOpenDialog({
@@ -40,14 +43,12 @@ ipcMain.handle('selectRecordingsDir', async (event) => {
 	return filePaths[0]
 })
 
-ipcMain.handle('updateRecordingsDir', (event, path) => {
+ipcMain.handle('settings:recDir::update', (event, path) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
-	if (!path) {
-		return false
-	}
+	if (!path) return false
 
-	return new Promise((res) =>
+	return new Promise<boolean>((res) =>
 		stat(path, (err, stats) => {
 			// If directory doesn't exist it will contain an error
 			if (err || !stats.isDirectory()) {

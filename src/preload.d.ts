@@ -1,16 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type VideoStreamChannels =
-	| 'getVideoSources'
-	| 'processVideo'
-	| 'getCurrentStream'
-	| 'setCurrentStream'
-	| 'clearCurrentStream'
-	| 'getRecordings'
+	| 'video:getSources'
+	| 'video:process'
+	| 'video:stream::get'
+	| 'video:stream::set'
+	| 'video:stream::clear'
+	| 'video:getRecordings'
 
-export type SettingsChannels = 'getRecordingsDir' | 'selectRecordingsDir' | 'updateRecordingsDir'
+export type SettingsChannels =
+	| 'settings:recDir::get'
+	| 'settings:recDir::select'
+	| 'settings:recDir::update'
 
-export type MainWindowChannels = 'isMaximized'
+export type MainWindowChannels = 'window:isMaximized'
 
 export type Channels = VideoStreamChannels | SettingsChannels | MainWindowChannels
 
@@ -22,10 +25,10 @@ declare global {
 
 	interface Window {
 		ipcRenderer: {
-			send(channel: Channels, args?: any[]): void
+			send(channel: Channels, ...args: any[]): void
 			on(channel: Channels, listener: (...args: any[]) => void): (() => void) | undefined
 			once(channel: Channels, listener: (...args: any[]) => void): void
-			off(channel: Channels): void
+			invoke<T = any>(channel: Channels, ...args: any[]): Promise<T>
 		}
 
 		videoStream: {
@@ -53,7 +56,6 @@ declare global {
 				set(id: string): void
 				clear(): void
 			}
-
 			/**
 			 * Retrieves the list of previously saved recordings. Reads the directory
 			 * configured in the settings for the location of the recordings. It then
@@ -89,6 +91,12 @@ declare global {
 			on(channel: Channels, listener: (event: IpcMainEvent, ...args: any[]) => void): this
 			once(channel: Channels, listener: (...args: any[]) => void): void
 			handle(channel: Channels, listener: (event: IpcMainInvokeEvent, ...args: any[]) => void): this
+		}
+
+		interface IpcRenderer {
+			invoke<T = any>(channel: Channels, ...args: any[]): Promise<T>
+			send(channel: Channels, ...args: any[]): void
+			on(channel: Channels, listener: (event: IpcMainEvent, ...args: any[]) => void): this
 		}
 	}
 }

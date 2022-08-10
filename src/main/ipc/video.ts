@@ -13,10 +13,10 @@ const timestamp = () =>
 		.replace(/:/g, '_')
 
 /**
- * Handles the `getVideoSources` message from the renderer process.
+ * Handles the `video:getSources` message from the renderer process.
  * Return an id string of the selected video source.
  */
-ipcMain.on('getVideoSources', async (event) => {
+ipcMain.on('video:getSources', async (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	const sources = await desktopCapturer.getSources({
@@ -26,7 +26,7 @@ ipcMain.on('getVideoSources', async (event) => {
 	const videoOptionsMenu = Menu.buildFromTemplate(
 		sources.map((source) => ({
 			label: source.name,
-			click: () => event.reply('getVideoSources', source.id),
+			click: () => event.reply('video:getSources', source.id),
 		}))
 	)
 	// Display options
@@ -37,14 +37,14 @@ ipcMain.on('getVideoSources', async (event) => {
  * Used to listen to for when receiving a video with the ArrayBuffer of the
  * stream from the renderer process, prompt where to save the video.
  */
-ipcMain.handle('processVideo', async (event, ab) => {
+ipcMain.handle('video:process', async (event, ab) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	if (!ab) {
 		throw new Error('[Recording] No video stream received')
 	}
 
-	const buffer = Buffer.from(ab)
+	const buffer: Buffer = Buffer.from(ab)
 	const { filePath } = await dialog.showSaveDialog({
 		title: 'Save video',
 		buttonLabel: 'Save video',
@@ -61,19 +61,19 @@ ipcMain.handle('processVideo', async (event, ab) => {
 		})
 })
 
-ipcMain.handle('getCurrentStream', (event) => {
+ipcMain.handle('video:stream::get', (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	return store.get('currentStream', '')
 })
 
-ipcMain.on('setCurrentStream', (event, id) => {
+ipcMain.on('video:stream::set', (event, id) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	store.set('currentStream', id)
 })
 
-ipcMain.on('clearCurrentStream', (event) => {
+ipcMain.on('vidoe:stream::clear', (event) => {
 	if (!validateIpcSender(event.senderFrame)) return
 
 	store.delete('currentStream')
@@ -91,8 +91,8 @@ app.on('before-quit', () => {
 	store.delete('currentStream')
 })
 
-ipcMain.handle('getRecordings', async (event) => {
-	if (!validateIpcSender(event.senderFrame)) return
+ipcMain.handle('video:getRecordings', async (event) => {
+	if (!validateIpcSender(event.senderFrame)) return 'Failed to get recordings'
 
 	return new Promise<Video[] | string>((resVideos) => {
 		readdir(store.get('recordingsDir'), async (err, files) => {
