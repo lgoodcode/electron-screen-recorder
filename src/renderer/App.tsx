@@ -5,17 +5,17 @@ import routes from './routes'
 import theme from './styles/theme'
 
 export default function App() {
-	return (
-		<ChakraProvider theme={theme}>
-			<Router>
-				<Routes>
-					<Route path="/" element={<Layout />}>
-						{routes.map((route) => (
-							<Route path={route.path} element={<route.Element />} key={route.path} />
-						))}
-					</Route>
-				</Routes>
-			</Router>
-		</ChakraProvider>
-	)
+  return (
+    <ChakraProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {routes.map((route) => (
+              <Route path={route.path} element={<route.Element />} key={route.path} />
+            ))}
+          </Route>
+        </Routes>
+      </Router>
+    </ChakraProvider>
+  )
 }

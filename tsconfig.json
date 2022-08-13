@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "target": "es6",
-		"module": "CommonJS",
+    "module": "CommonJS",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
     "allowJs": true,
-		"pretty": true,
+    "pretty": true,
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,13 +17,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-		"allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "outDir": "./build",
     "baseUrl": "./src",
   },
-	"include": ["src/**/*", "scripts/*"],
+  "include": ["src/**/*", "scripts/*"],
   "exclude": ["./release"],
-	"files": ["assets/assets.d.ts", "src/preload.d.ts"]
+  "files": ["assets/assets.d.ts", "src/preload.d.ts"]
 }

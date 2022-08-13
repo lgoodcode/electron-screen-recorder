@@ -5,22 +5,22 @@ import Recordings from './pages/Recordings'
 import Settings from './pages/Settings'
 
 export default [
-	{
-		name: 'New Recording',
-		path: '/',
-		Element: Record,
-		icon: AiOutlineVideoCamera,
-	},
-	{
-		name: 'View Recordings',
-		path: '/recordings',
-		Element: Recordings,
-		icon: AiOutlineFolderOpen,
-	},
-	{
-		name: 'Settings',
-		path: '/settings',
-		Element: Settings,
-		icon: BiCog,
-	},
+  {
+    name: 'New Recording',
+    path: '/',
+    Element: Record,
+    icon: AiOutlineVideoCamera,
+  },
+  {
+    name: 'View Recordings',
+    path: '/recordings',
+    Element: Recordings,
+    icon: AiOutlineFolderOpen,
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    Element: Settings,
+    icon: BiCog,
+  },
 ]
