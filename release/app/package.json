@@ -1,12 +1,12 @@
 {
-  "name": "secure-electron-boilerplate",
+  "name": "electron-screen-recorder",
   "version": "1.0.0",
-  "description": "Fast, secure, unopinionated boilerplate for Electron apps",
+  "description": "Simple app to record your screen and save it to a file",
   "license": "MIT",
   "author": {
     "name": "Lawrence Good",
     "email": "lawrence.good55@gmail.com",
-    "url": "https://github.com/secure-electron-boilerplate"
+    "url": "https://github.com/lgoodcode/electron-screen-recorder"
   },
   "main": "./build/main.js",
   "scripts": {},

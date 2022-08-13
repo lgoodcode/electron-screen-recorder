@@ -91,6 +91,9 @@ const rendererConfig: webpack.Configuration = {
 					hashEnabled: {
 						'style-src': false,
 					},
+					nonceEnabled: {
+						'style-src': false,
+					},
 				}
 			),
 	].filter(Boolean) as webpack.WebpackPluginInstance[],

@@ -1,6 +1,6 @@
 {
   "name": "electron-screen-recorder",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Simple app to record your screen and save it to a file.",
   "author": "Lawrence Good",
   "license": "MIT",

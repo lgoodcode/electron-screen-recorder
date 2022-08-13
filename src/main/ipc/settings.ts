@@ -7,21 +7,23 @@ import validateIpcSender from '../../lib/validateIpcSender'
 /**
  * Initialize the recordings location from config file
  */
-if (!store.has('recordingsDir')) {
-	const path = join(app.getPath('userData'), 'recordings')
+app.on('ready', () => {
+	if (!store.has('recordingsDir')) {
+		const path = join(app.getPath('userData'), 'recordings')
 
-	store.set('recordingsDir', path)
+		store.set('recordingsDir', path)
 
-	stat(path, (err) => {
-		if (err) {
-			mkdir(path, (err) => {
-				if (!err) {
-					throw new Error('Failed to create default recordings directory')
-				}
-			})
-		}
-	})
-}
+		stat(path, (err) => {
+			if (err) {
+				mkdir(path, (err) => {
+					if (err) {
+						throw new Error('Failed to create default recordings directory: ' + path)
+					}
+				})
+			}
+		})
+	}
+})
 
 /**
  * Retrieves the recordings location from config file
