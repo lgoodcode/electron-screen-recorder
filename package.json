@@ -4,6 +4,7 @@
   "description": "Simple app to record your screen and save it to a file.",
   "author": "Lawrence Good",
   "license": "MIT",
+  "private": true,
   "repository": {
     "type": "github",
     "url": "https://github.com/lgoodcode/electron-screen-recorder"
@@ -19,11 +20,12 @@
     "pack": "npm run build && electron-builder",
     "pack:dir": "ts-node scripts/checkBuild.ts --run && electron-builder --dir",
     "pack:dev": "cross-env DEBUG_PROD=true electron release/app",
+    "publish": "electron-builder --win --publish always",
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
   "build": {
-    "productName": "Electron Screen Recorder",
+    "productName": "Electron-Screen-Recorder",
     "appId": "com.electron.screen-recorder",
     "artifactName": "${productName}.${ext}",
     "directories": {
@@ -34,6 +36,7 @@
     "extraResources": [
       "./assets/**"
     ],
+    "publish": ["github"],
     "win": {
       "target": [
         {
@@ -79,10 +82,10 @@
     "testEnvironmentOptions": {
       "url": "http://localhost/"
     },
-		"moduleDirectories": [
-			"node_modules",
-			"<rootDir>/src"
-		],
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__tests__/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy"

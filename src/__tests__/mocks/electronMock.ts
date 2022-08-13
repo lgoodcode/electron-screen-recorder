@@ -11,7 +11,7 @@ export const contextBridge = Electron.contextBridge as jest.Mocked<typeof Electr
 export const ipcMain = Electron.ipcMain as jest.Mocked<typeof Electron.ipcMain>
 
 export default {
-	contextBridge,
-	ipcRenderer,
-	ipcMain,
+  contextBridge,
+  ipcRenderer,
+  ipcMain,
 }
