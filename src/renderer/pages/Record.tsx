@@ -30,7 +30,7 @@ export default function Record() {
 	} = useRecorder({
 		videoRef,
 	})
-	const handleGetSources = () => window.videoStream.getVideoSources()
+	const handleGetSources = () => window.video.getVideoSources()
 	const toast = useToast({
 		position: 'top-right',
 		isClosable: true,

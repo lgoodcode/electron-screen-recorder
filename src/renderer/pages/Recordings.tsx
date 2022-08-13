@@ -55,7 +55,7 @@ export default function Recordings() {
 	 * Otherwise, it will set the recordings state to the retrieved recordings.
 	 */
 	useEffect(() => {
-		window.videoStream.getRecordings().then((recordings) => {
+		window.video.getRecordings().then((recordings) => {
 			setLoading(false)
 
 			if (typeof recordings === 'string') {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export type VideoStreamChannels =
+export type VideoChannels =
 	| 'video:getSources'
 	| 'video:process'
 	| 'video:stream::get'
@@ -13,9 +13,9 @@ export type SettingsChannels =
 	| 'settings:recDir::select'
 	| 'settings:recDir::update'
 
-export type MainWindowChannels = 'window:isMaximized'
+export type WindowChannels = 'window:isMaximized'
 
-export type Channels = VideoStreamChannels | SettingsChannels | MainWindowChannels
+export type Channels = VideoChannels | SettingsChannels | WindowChannels
 
 declare global {
 	type Video = {
@@ -24,14 +24,7 @@ declare global {
 	}
 
 	interface Window {
-		ipcRenderer: {
-			send(channel: Channels, ...args: any[]): void
-			on(channel: Channels, listener: (...args: any[]) => void): (() => void) | undefined
-			once(channel: Channels, listener: (...args: any[]) => void): void
-			invoke<T = any>(channel: Channels, ...args: any[]): Promise<T>
-		}
-
-		videoStream: {
+		video: {
 			getVideoSources(): void
 			/**
 			 * The selected video source id is passed as the argument to the
@@ -69,7 +62,9 @@ declare global {
 		}
 
 		settings: {
+			/** Returns the directory of the recordings */
 			getRecordingsDir(): Promise<string>
+			/** Returns the filepath of the selected directory to store recordings */
 			selectRecordingsDir(): Promise<string>
 			updateRecordingsDir(path: string): Promise<boolean>
 		}

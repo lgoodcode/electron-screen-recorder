@@ -68,9 +68,7 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
-    "setupFiles": [
-      "<rootDir>/scripts/checkBuild.ts"
-    ],
+
     "setupFilesAfterEnv": [
       "<rootDir>/src/__tests__/setupTests.js"
     ],

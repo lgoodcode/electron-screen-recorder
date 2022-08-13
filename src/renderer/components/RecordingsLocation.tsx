@@ -44,7 +44,7 @@ export default function RecordsLocation(props: BoxProps) {
 	}
 
 	const handleSave = () => {
-		window.settings.updateRecordingsDir(newPath).then((valid: boolean) => {
+		window.settings.updateRecordingsDir(newPath).then((valid) => {
 			setIsValid(valid)
 
 			if (valid) {
@@ -66,7 +66,7 @@ export default function RecordsLocation(props: BoxProps) {
 	 */
 	useEffect(() => {
 		if (!path) {
-			window.settings.getRecordingsDir().then((path: string) => {
+			window.settings.getRecordingsDir().then((path) => {
 				setPath(path)
 				setNewPath(path)
 			})

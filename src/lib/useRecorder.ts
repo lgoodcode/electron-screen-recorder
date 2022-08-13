@@ -61,7 +61,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 	}
 
 	const stopRecording = () => {
-		window.videoStream.currentStream.clear()
+		window.video.currentStream.clear()
 
 		if (recorder) {
 			recorder.stop()
@@ -76,7 +76,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 	}
 
 	const cancelRecording = () => {
-		window.videoStream.currentStream.clear()
+		window.video.currentStream.clear()
 
 		setStream(null)
 		setHasSource(false)
@@ -125,7 +125,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 	 */
 	useEffect(() => {
 		if (video) {
-			window.videoStream.currentStream.get().then((id: string) => {
+			window.video.currentStream.get().then((id: string) => {
 				if (!id) {
 					setLoading(false)
 				} else {
@@ -138,8 +138,8 @@ export default function useRecorder(options?: useRecorderOptions) {
 
 			// Once the main process has sent the video sources, get the stream
 			// using the navigator, set the playback source, and create the recorder.
-			window.videoStream.handleVideoSource(async (id: string) => {
-				window.videoStream.currentStream.set(id)
+			window.video.handleVideoSource(async (id: string) => {
+				window.video.currentStream.set(id)
 
 				setVideoStream(video, await getStream(id, streamConstraints))
 			})
@@ -166,7 +166,7 @@ export default function useRecorder(options?: useRecorderOptions) {
 				setHasSource(false)
 				setChunks([])
 				// Process video
-				const result = await window.videoStream.processVideo(await blob.arrayBuffer())
+				const result = await window.video.processVideo(await blob.arrayBuffer())
 				// Completed video processing
 				setProcessing(false)
 				// If there was an error, set it in state

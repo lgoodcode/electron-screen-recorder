@@ -12,7 +12,7 @@ export const assetsPath = resolveApp('assets')
 export const srcMainPath = resolveApp('src/main')
 export const srcMainFile = resolveApp('src/main/main.ts')
 export const srcPreloadPath = resolveApp('src/preload')
-export const srcPreloadFile = resolveApp('src/preload/preload.ts')
+export const srcPreloadFile = resolveApp('src/preload/index.ts')
 export const srcRendererPath = resolveApp('src/renderer')
 export const indexHTMLFile = resolveApp('src/renderer/index.html')
 
