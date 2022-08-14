@@ -26,6 +26,7 @@ const mainConfig: webpack.Configuration = {
     minimizer: [
       new TerserPlugin({
         parallel: true,
+        minify: TerserPlugin.swcMinify,
       }),
     ],
   },
