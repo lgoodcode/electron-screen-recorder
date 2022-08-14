@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { merge } from 'webpack-merge'
-import webpack from 'webpack'
+import webpack, { type Configuration } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
@@ -15,7 +15,7 @@ import CSP from './csp'
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isProduction = process.env.NODE_ENV === 'production'
 
-const rendererConfig: webpack.Configuration = {
+const rendererConfig: Configuration = {
   name: 'renderer',
   devtool: isDevelopment
     ? 'inline-source-map'
@@ -40,6 +40,27 @@ const rendererConfig: webpack.Configuration = {
   },
   module: {
     rules: [
+      /**
+       * Need to include the swc-loader explicitly here because even with the
+       * merge with the base config, it still wont compile React.
+       */
+      {
+        test: /\.(js|jsx|ts|tsx)?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'swc-loader',
+          options: {
+            jsc: {
+              target: 'es2021',
+              transform: {
+                react: {
+                  runtime: 'automatic',
+                },
+              },
+            },
+          },
+        },
+      },
       {
         test: /\.css$/,
         use: [isProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'],

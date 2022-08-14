@@ -16,11 +16,20 @@ const config: Configuration = {
     rules: [
       // Typescript loader
       {
-        test: /\.ts[x]?$/,
+        test: /\.(js|jsx|ts|tsx)?$/,
         exclude: /node_modules/,
         use: {
-          // transpileOnly is set to `true` by default with `fork-ts-checker-webpack-plugin`
-          loader: 'ts-loader',
+          loader: 'swc-loader',
+          options: {
+            jsc: {
+              target: 'es2021',
+              transform: {
+                react: {
+                  runtime: 'automatic',
+                },
+              },
+            },
+          },
         },
       },
       // Fonts
@@ -41,7 +50,7 @@ const config: Configuration = {
   resolve: {
     // Specifically points node_modules directory to root
     modules: ['node_modules'],
-    // Used to resolve imports
+    // Used to resolve imports with specifying extensions
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
   },
   // Cache module dependencies for faster rebuilds
