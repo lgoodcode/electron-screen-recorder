@@ -16,7 +16,7 @@ const config: Configuration = {
     rules: [
       // Typescript loader
       {
-        test: /\.(js|jsx|ts|tsx)?$/,
+        test: /\.ts?$/,
         exclude: /node_modules/,
         use: {
           loader: 'swc-loader',
